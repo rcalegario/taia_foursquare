@@ -30,9 +30,14 @@ getWI = function(user_i, base_checks){
   base
 }
 
+library(dplyr)
+
+users = social %>% select(user_id) %>% distinct() %>% top_n(-1000)
+users = users[order(users$user_id),]
+
 WIK = data_frame(i = 0, k = 0, wik = 0)
 ini <- proc.time()
-for(u in c(1:1000)){
+for(u in users){
   ini_u <- proc.time()
   print(u)
   novoWIK = getWI(u, checkins)
@@ -40,3 +45,5 @@ for(u in c(1:1000)){
   proc.time() - ini_u
 }
 proc.time() - ini
+
+write.table(WIK, file = "wik.csv", sep = ";", quote = FALSE, row.names = FALSE)

@@ -123,3 +123,4 @@ for(j in users$user_id){
 proc.time() - ini
 
 write.table(SIK, file = "SI.csv", sep = ";", quote = FALSE, row.names = FALSE)
+SI = read.csv("SI.csv", sep = ";")
