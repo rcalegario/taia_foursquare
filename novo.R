@@ -109,15 +109,17 @@ getSI <- function(idUsuario,base,base2,N){
   temp
 }
 
-users = social %>% select(user_id) %>% distinct()
-users = users[with(users, order(user_id)),]
+freq = social %>% group_by(user_id) %>% summarise(freq = n())
+freq = freq %>% semi_join(users)
+users = social %>% select(user_id) %>% distinct() %>% top_n(-1000)
 
 ini <- proc.time()
 SIK = data.frame(x1 = 0, x2 = 0, n = 0)
-for(j in c(1:1000)){
+for(j in users$user_id){
   print(j)
   novaSIK <- getSI(j, social ,checkins, .05) 
   SIK = union(SIK,novaSIK)
 }
 proc.time() - ini
 
+write.table(SIK, file = "SI.csv", sep = ";", quote = FALSE, row.names = FALSE)
