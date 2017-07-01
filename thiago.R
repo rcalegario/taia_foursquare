@@ -10,6 +10,8 @@ getWIK = function(user_i, user_k, base_checks){
   return((numerador/denominador))
 }
 
+
+
 getWI = function(user_i, base_checks){
   require(dplyr)
   base = data_frame(i = 0, k = 0, wik = 0)
@@ -45,5 +47,28 @@ for(u in users){
   proc.time() - ini_u
 }
 proc.time() - ini
-
+''
 write.table(WIK, file = "wik.csv", sep = ";", quote = FALSE, row.names = FALSE)
+
+wik  = read.csv("wik.csv", sep =";")
+base_checks = read.csv("checkins3.csv", sep=";")
+
+cij = function(wik_g, base_check, userid, venue){
+  require(dplyr)
+  wik_i = wik_g %>% filter(i == userid) %>% select(wik)
+  wik_j = wik_g %>% filter(k == userid) %>% select(wik)
+  sumwik = bind_rows(wik_j,wik_i) %>% sum()
+  print(sumwik)
+  visit = base_check %>% filter(venue_id == venue) %>% select(user_id)
+  num = 0
+  for(id in visit$user_id){
+    num_i = wik_g %>% filter(i == id) %>% select(wik)
+    num_k = wik_g %>% filter(k == id) %>% select(wik)
+    sumnum = bind_rows(num_k,num_i) %>% sum()
+    num = num + sumnum
+    print(num)
+  }
+  return (num/sumwik)
+}
+
+#use cij para obter o valor requerido
