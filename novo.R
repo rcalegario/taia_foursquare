@@ -77,7 +77,7 @@ getSI <- function(idUsuario,base,base2,N){
   if(nrow(lugares) > 0){
     lugar = TRUE
   }
-
+  
   temp <- data.frame(x1=0,x2=0,n=0) 
   if(lugar){
     for( i in 1:length(amigos$friend_id)){
